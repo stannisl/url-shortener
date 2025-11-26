@@ -1,0 +1,3 @@
+DROP TABLE IF EXISTS url_analytics;
+
+DROP TABLE IF EXISTS urls;
