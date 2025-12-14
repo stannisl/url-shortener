@@ -15,12 +15,10 @@ const (
 )
 
 func main() {
-	// Load .env file
 	if err := godotenv.Load(); err != nil {
 		log.Println("Warning: .env file not found, using environment variables")
 	}
 
-	// Define flags
 	var (
 		command        = flag.String("command", "", "Migration command: up, down, down-all, version, force, steps")
 		migrationsPath = flag.String("path", defaultMigrationsPath, "Path to migrations folder")
@@ -41,7 +39,7 @@ func main() {
 	if databaseURL == "" {
 		log.Fatal("DATABASE_URL environment variable is required")
 	}
-
+	fmt.Println("database URL:", databaseURL)
 	// Create migrator
 	migrator, err := postgres.NewMigrator(databaseURL, *migrationsPath)
 	if err != nil {
