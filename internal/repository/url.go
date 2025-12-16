@@ -12,20 +12,15 @@ import (
 	"github.com/wb-go/wbf/dbpg"
 )
 
-type UrlRepository interface {
-	GetOriginUrl(ctx context.Context, shortUrl string) (*domain.ShortenUrlModel, error)
-	CreateShortUrl(ctx context.Context, originUrl string) (*domain.ShortenUrlModel, error)
-}
-
-type urlRepository struct {
+type UrlRepository struct {
 	db *dbpg.DB
 }
 
-func NewUrlRepository(db *dbpg.DB) UrlRepository {
-	return &urlRepository{db: db}
+func NewUrlRepository(db *dbpg.DB) *UrlRepository {
+	return &UrlRepository{db: db}
 }
 
-func (r *urlRepository) GetOriginUrl(ctx context.Context, shortUrl string) (*domain.ShortenUrlModel, error) {
+func (r *UrlRepository) GetOriginUrl(ctx context.Context, shortUrl string) (*domain.ShortenUrlModel, error) {
 	query := `SELECT id, original_url, short_code 
 				FROM urls 
 			    WHERE short_code = $1`
@@ -47,7 +42,7 @@ func (r *urlRepository) GetOriginUrl(ctx context.Context, shortUrl string) (*dom
 	return &shortenUrlModel, nil
 }
 
-func (r *urlRepository) CreateShortUrl(ctx context.Context, originUrl string) (*domain.ShortenUrlModel, error) {
+func (r *UrlRepository) CreateShortUrl(ctx context.Context, originUrl string) (*domain.ShortenUrlModel, error) {
 	query := `
 			INSERT INTO urls (original_url, short_code) 
 			VALUES ($1, $2) 

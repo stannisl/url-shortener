@@ -7,20 +7,15 @@ import (
 	"github.com/wb-go/wbf/dbpg"
 )
 
-type AnalyticsRepository interface {
-	GetSummary(ctx context.Context, urlID int) (*domain.AnalyticsSummary, error)
-	AddAnalytics(ctx context.Context, redirectModel domain.UrlAnalyticsModel) error
-}
-
-type analyticsRepository struct {
+type AnalyticsRepository struct {
 	db *dbpg.DB
 }
 
-func NewAnalyticsRepository(db *dbpg.DB) AnalyticsRepository {
-	return &analyticsRepository{db: db}
+func NewAnalyticsRepository(db *dbpg.DB) *AnalyticsRepository {
+	return &AnalyticsRepository{db: db}
 }
 
-func (r *analyticsRepository) GetSummary(ctx context.Context, urlID int) (*domain.AnalyticsSummary, error) {
+func (r *AnalyticsRepository) GetSummary(ctx context.Context, urlID int) (*domain.AnalyticsSummary, error) {
 	query := `SELECT 
     			count(*) as total_clicks,
 				count(DISTINCT ip_address) as unique_clicks 
@@ -37,7 +32,7 @@ func (r *analyticsRepository) GetSummary(ctx context.Context, urlID int) (*domai
 	return &analytics, nil
 }
 
-func (r *analyticsRepository) AddAnalytics(ctx context.Context, redirectModel domain.UrlAnalyticsModel) error {
+func (r *AnalyticsRepository) AddAnalytics(ctx context.Context, redirectModel domain.UrlAnalyticsModel) error {
 	query := `INSERT INTO url_analytics (url_id, user_agent, ip_address)
 			  VALUES ($1, $2, $3)
 			  RETURNING (url_id, user_agent, ip_address)`

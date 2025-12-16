@@ -16,3 +16,9 @@ migrate-version:
 
 migrate-force:
 	go run $(MIGRATOR_PATH) -command=force -force-version=$(V)
+
+gen-mocks:
+	mockery
+
+gen-docs:
+	swag init -g cmd/service/service.go -o docs

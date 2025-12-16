@@ -1,0 +1,6 @@
+packages:
+  github.com/stannisl/url-shortener/internal/service:
+    config:
+      all: true
+      dir: "internal/mocks"
+      filename: "{{.InterfaceName | snakecase}}.go"

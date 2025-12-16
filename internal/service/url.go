@@ -8,11 +8,11 @@ import (
 )
 
 type UrlService struct {
-	urlRepository       repository.UrlRepository
+	urlRepository       UrlRepository
 	analyticsRepository repository.AnalyticsRepository
 }
 
-func NewUrlService(urlRepository repository.UrlRepository) *UrlService {
+func NewUrlService(urlRepository UrlRepository) *UrlService {
 	return &UrlService{
 		urlRepository: urlRepository,
 	}

@@ -39,13 +39,13 @@ func (h *UrlHandler) Redirect(c *ginext.Context) {
 	shortUrl = strings.Trim(shortUrl, "\\/\"") // Триммим \, /, "
 
 	if shortUrl == "" {
-		SetError(c, domain.NewBadRequestError("Invalid short_url", domain.ErrModelNotFound))
+		//SetError(c, domain.NewBadRequestError( ,domain.Err)) ??
 		return
 	}
 
 	urlModel, err := h.urlService.GetOriginUrl(c.Request.Context(), shortUrl)
 	if err != nil {
-		SetError(c, domain.NewBadRequestError("Short URL not found", err))
+		SetError(c, HandleServiceError(err, "Short URL not found"))
 		return
 	}
 
