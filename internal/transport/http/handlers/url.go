@@ -24,6 +24,16 @@ func NewUrlHandler(urlService *service.UrlService, analyticsService *service.Ana
 	}
 }
 
+// Redirect перенаправляет на оригинальный URL
+// @Summary      Редирект по короткой ссылке
+// @Description  Перенаправляет пользователя на оригинальный URL и записывает аналитику
+// @Tags         URLs
+// @Produce      html
+// @Param        short_url  path  string  true  "Короткий код ссылки"  example(abc123XYZ)
+// @Success      302  {string}  string  "Редирект на оригинальный URL"
+// @Failure      404  {object}  dto.ErrorResponse  "Ссылка не найдена"
+// @Failure      500  {object}  dto.ErrorResponse  "Внутренняя ошибка сервера"
+// @Router       /s/{short_url} [get]
 func (h *UrlHandler) Redirect(c *ginext.Context) {
 	shortUrl := c.Param("short_url")
 	shortUrl = strings.Trim(shortUrl, "\\/\"") // Триммим \, /, "
@@ -50,6 +60,19 @@ func (h *UrlHandler) Redirect(c *ginext.Context) {
 	c.Redirect(http.StatusFound, urlModel.OriginalUrl)
 }
 
+// CreateShortUrl создаёт короткую ссылку
+// @Summary      Создать короткую ссылку
+// @Description  Создаёт сокращённый URL для переданного оригинального адреса
+// @Tags         URLs
+// @Accept       json
+// @Produce      json
+// @Param        request  body      dto.CreateUrlRequest  true  "Данные для создания ссылки"
+// @Success      201      {object}  dto.APIResponse{data=dto.ShortenURLResponse}  "Ссылка успешно создана"
+// @Failure      400      {object}  dto.ErrorResponse  "Неверный формат запроса"
+// @Failure      409      {object}  dto.ErrorResponse  "Конфликт (ссылка уже существует)"
+// @Failure      422      {object}  dto.ErrorResponse  "Ошибка валидации"
+// @Failure      500      {object}  dto.ErrorResponse  "Внутренняя ошибка сервера"
+// @Router       /shorten [post]
 func (h *UrlHandler) CreateShortUrl(c *gin.Context) {
 	var createUrlRequest dto.CreateUrlRequest
 

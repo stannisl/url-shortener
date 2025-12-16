@@ -8,6 +8,9 @@ import (
 	"github.com/stannisl/url-shortener/internal/transport/http/handlers"
 	"github.com/stannisl/url-shortener/internal/transport/http/middleware"
 	"github.com/wb-go/wbf/ginext"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 type Router interface {
@@ -31,13 +34,19 @@ func New(
 	urlHandler := handlers.NewUrlHandler(urlService, analyticsService)
 	analyticsHandler := handlers.NewAnalyticsHandler(analyticsService)
 
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	health := router.Group("/health")
 	{
 		health.GET("", healthHandler.Health)
 	}
-	router.GET("/analytics/:short_url", analyticsHandler.GetAnalytics)
-	router.POST("/shorten", urlHandler.CreateShortUrl)
-	router.GET("/s/:short_url", urlHandler.Redirect)
+	
+	api := router.Group("")
+	{
+		api.GET("/analytics/:short_url", analyticsHandler.GetAnalytics)
+		api.POST("/shorten", urlHandler.CreateShortUrl)
+		api.GET("/s/:short_url", urlHandler.Redirect)
+	}
 
 	return &ginRouter{
 		router: router,

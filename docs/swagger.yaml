@@ -1,0 +1,179 @@
+definitions:
+  dto.APIResponse:
+    properties:
+      data: {}
+    type: object
+  dto.AnalyticsSummaryResponse:
+    description: Аналитика переходов по сокращённой ссылке
+    properties:
+      total_clicks:
+        example: 150
+        type: integer
+      unique_visitors:
+        example: 89
+        type: integer
+    type: object
+  dto.CreateUrlRequest:
+    description: Запрос на создание сокращённого URL
+    properties:
+      origin_url:
+        example: https://www.google.com
+        type: string
+    required:
+    - origin_url
+    type: object
+  dto.ErrorResponse:
+    description: Ответ при возникновении ошибки
+    properties:
+      code:
+        example: 404
+        type: integer
+      error:
+        example: Resource not found
+        type: string
+      success:
+        example: false
+        type: boolean
+    type: object
+  dto.ShortenURLResponse:
+    description: Ответ с информацией о сокращённой ссылке
+    properties:
+      origin_url:
+        example: https://www.google.com
+        type: string
+      shorten_url:
+        example: abc123XYZ
+        type: string
+    type: object
+info:
+  contact: {}
+  description: Сервис для сокращения URL и сбора аналитики переходов
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  title: URL Shortener API
+  version: "1.0"
+paths:
+  /analytics/{short_url}:
+    get:
+      description: Возвращает статистику переходов по короткой ссылке
+      parameters:
+      - description: Короткий код ссылки
+        example: abc123XYZ
+        in: path
+        name: short_url
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Статистика получена
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.AnalyticsSummaryResponse'
+              type: object
+        "404":
+          description: Ссылка не найдена
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Получить аналитику
+      tags:
+      - Analytics
+  /health:
+    get:
+      description: Проверяет доступность сервиса
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Сервис работает
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Health check
+      tags:
+      - Health
+  /s/{short_url}:
+    get:
+      description: Перенаправляет пользователя на оригинальный URL и записывает аналитику
+      parameters:
+      - description: Короткий код ссылки
+        example: abc123XYZ
+        in: path
+        name: short_url
+        required: true
+        type: string
+      produces:
+      - text/html
+      responses:
+        "302":
+          description: Редирект на оригинальный URL
+          schema:
+            type: string
+        "404":
+          description: Ссылка не найдена
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Редирект по короткой ссылке
+      tags:
+      - URLs
+  /shorten:
+    post:
+      consumes:
+      - application/json
+      description: Создаёт сокращённый URL для переданного оригинального адреса
+      parameters:
+      - description: Данные для создания ссылки
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateUrlRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Ссылка успешно создана
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.ShortenURLResponse'
+              type: object
+        "400":
+          description: Неверный формат запроса
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "409":
+          description: Конфликт (ссылка уже существует)
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "422":
+          description: Ошибка валидации
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Создать короткую ссылку
+      tags:
+      - URLs
+schemes:
+- http
+- https
+swagger: "2.0"
