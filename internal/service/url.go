@@ -4,12 +4,10 @@ import (
 	"context"
 
 	"github.com/stannisl/url-shortener/internal/domain"
-	"github.com/stannisl/url-shortener/internal/repository"
 )
 
 type UrlService struct {
-	urlRepository       UrlRepository
-	analyticsRepository repository.AnalyticsRepository
+	urlRepository UrlRepository
 }
 
 func NewUrlService(urlRepository UrlRepository) *UrlService {

@@ -23,16 +23,16 @@
 
 ## Технический стек
 
-| Категория | Технологии |
-|-----------|------------|
-| **Language** | Go (Golang) |
-| **Framework** | Gin Web Framework |
-| **Database** | PostgreSQL 15 |
+| Категория     | Технологии                          |
+|---------------|-------------------------------------|
+| **Language**  | Go (Golang)                         |
+| **Framework** | Gin Web Framework                   |
+| **Database**  | PostgreSQL 15                       |
 | **Migration** | Golang-Migrate (Custom CLI wrapper) |
-| **Logging** | Zerolog |
-| **Config** | Viper (YAML + Env) |
-| **Deploy** | Docker, Docker Compose |
-| **Testing** | Testify, Mockery |
+| **Logging**   | Zerolog                             |
+| **Config**    | Viper (YAML + Env)                  |
+| **Deploy**    | Docker, Docker Compose              |
+| **Testing**   | Testify, Mockery                    |
 
 ---
 

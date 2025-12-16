@@ -20,8 +20,7 @@ func (r *AnalyticsRepository) GetSummary(ctx context.Context, urlID int) (*domai
     			count(*) as total_clicks,
 				count(DISTINCT ip_address) as unique_clicks 
 			  FROM url_analytics 
-			  WHERE url_id = $1
-	`
+			  WHERE url_id = $1`
 
 	var analytics domain.AnalyticsSummary
 	err := r.db.QueryRowContext(ctx, query, urlID).Scan(&analytics.TotalClicks, &analytics.UniqueVisitors)

@@ -63,8 +63,8 @@ func (r *UrlRepository) CreateShortUrl(ctx context.Context, originUrl string) (*
 				if pgErr.Code == "23505" {
 					continue
 				}
-				return nil, err
 			}
+			return nil, err
 		}
 		return &domain.ShortenUrlModel{
 			OriginalUrl: originUrl,
