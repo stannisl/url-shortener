@@ -39,7 +39,7 @@ func (r *urlRepository) GetOriginUrl(ctx context.Context, shortUrl string) (*dom
 	)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, domain.ModelNotFoundErr
+			return nil, domain.ErrModelNotFound
 		}
 		return nil, err
 	}
@@ -78,7 +78,7 @@ func (r *urlRepository) CreateShortUrl(ctx context.Context, originUrl string) (*
 	}
 
 	if pgErr.Code == "23505" {
-		return nil, domain.NotUniqueErr
+		return nil, domain.ErrNotUnique
 	}
 
 	return &domain.ShortenUrlModel{

@@ -47,6 +47,7 @@ func New(
 func registerMiddlewares(l logger.Logger, engine *ginext.Engine) {
 	engine.Use(middleware.RequestLogger(l))
 	engine.Use(middleware.Recovery(l))
+	engine.Use(middleware.ErrorHandler(l))
 }
 
 func (r *ginRouter) ServeHTTP(w http.ResponseWriter, req *http.Request) {

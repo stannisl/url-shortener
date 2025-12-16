@@ -26,14 +26,20 @@ func (ar ShortenURLResponse) FromModel(model *domain.ShortenUrlModel) ShortenURL
 	}
 }
 
-type AnalyticsSummary struct {
+type AnalyticsSummaryResponse struct {
 	TotalClicks    int `json:"total_clicks"`
 	UniqueVisitors int `json:"unique_visitors"`
 }
 
-func (ar AnalyticsSummary) FromModel(model *domain.AnalyticsSummary) AnalyticsSummary {
-	return AnalyticsSummary{
+func (ar AnalyticsSummaryResponse) FromModel(model *domain.AnalyticsSummary) AnalyticsSummaryResponse {
+	return AnalyticsSummaryResponse{
 		TotalClicks:    model.TotalClicks,
 		UniqueVisitors: model.UniqueVisitors,
 	}
+}
+
+type ErrorResponse struct {
+	Success bool   `json:"success"`
+	Error   string `json:"error"`
+	Code    int    `json:"code,omitempty"`
 }
