@@ -83,6 +83,9 @@ func (r *UrlRepository) CreateShortUrl(ctx context.Context, originUrl string) (*
 }
 
 func generateRandomUrl(length int) string {
+	if length < 5 {
+		length = 5
+	}
 	randomBytes := make([]byte, length)
 	_, _ = rand.Read(randomBytes)
 

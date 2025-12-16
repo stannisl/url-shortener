@@ -147,3 +147,40 @@ func TestUrlRepository_CreateShortUrl(t *testing.T) {
 		})
 	}
 }
+
+func Test_generateRandomUrl(t *testing.T) {
+	type args struct {
+		length int
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "Test 1",
+			args: args{3},
+			want: "dsads",
+		},
+		{
+			name: "Test 2",
+			args: args{5},
+			want: "dsads",
+		},
+		{
+			name: "Test 3",
+			args: args{0},
+			want: "dsdsd",
+		},
+		{
+			name: "Test 4",
+			args: args{10},
+			want: "dsadsddsds",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, len(tt.want), len(generateRandomUrl(tt.args.length)), "generateRandomUrl(%v)", tt.args.length)
+		})
+	}
+}
